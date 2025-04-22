@@ -27,8 +27,25 @@ function log(file, message) {
 }
 
 async function fetchNodesWithNulpstorage1(skip = 0, limit = BATCH_SIZE) {
+//   const query = `
+//     MATCH (n)
+//     WHERE (
+//         n.downloadUrl CONTAINS "nulpstorage1" OR
+//         n.posterImage CONTAINS "nulpstorage1" OR
+//         n.streamingUrl CONTAINS "nulpstorage1" OR
+//         n.appIcon CONTAINS "nulpstorage1" OR
+//         n.artifactUrl CONTAINS "nulpstorage1" OR
+//         n.previewUrl CONTAINS "nulpstorage1"
+//     )
+//     AND n.createdBy = "${CREATED_BY}"
+//     AND n.status = "Live"
+//     RETURN n
+//     SKIP $skip
+//     LIMIT $limit
+//   `;
+
   const query = `
-    MATCH (n)
+   MATCH (n)
     WHERE (
         n.downloadUrl CONTAINS "nulpstorage1" OR
         n.posterImage CONTAINS "nulpstorage1" OR
@@ -37,10 +54,7 @@ async function fetchNodesWithNulpstorage1(skip = 0, limit = BATCH_SIZE) {
         n.artifactUrl CONTAINS "nulpstorage1" OR
         n.previewUrl CONTAINS "nulpstorage1"
     )
-    AND n.createdBy = "${CREATED_BY}"
-    RETURN n
-    SKIP $skip
-    LIMIT $limit
+    AND n.status = "Live"
   `;
 
   try {
@@ -114,7 +128,13 @@ async function updateNodeUrls(nodeId, props) {
       }
     );
 
-    log(SUCCESS_LOG, `Updated nodeId=${nodeId}, IL_UNIQUE_ID=${IL_UNIQUE_ID}`);
+    console.log("updateRes", updateRes.data);
+
+    // log(SUCCESS_LOG, `Updated nodeId=${nodeId}, IL_UNIQUE_ID=${IL_UNIQUE_ID}, status=${updateRes.data.results[0].status}, primaryCategory=${updateRes.data.results[0].data[0].row[0].primaryCategory}`);
+    log(
+        SUCCESS_LOG,
+        `Updated nodeId=${nodeId}, IL_UNIQUE_ID=${IL_UNIQUE_ID}, status=${updateRes.data.results[0].data[0].row[0].status}, primaryCategory=${updateRes.data.results[0].data[0].row[0].primaryCategory}`
+      );
     return updateRes.data;
   } catch (err) {
     log(ERROR_LOG, `Failed to update nodeId=${nodeId}, IL_UNIQUE_ID=${IL_UNIQUE_ID} - ${err.message}`);
