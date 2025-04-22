@@ -50,15 +50,17 @@ async function fetchNodesWithNulpstorage1(skip = 0, limit = BATCH_SIZE) {
 
   const query = `
      MATCH (n)
-      WHERE (
-          n.downloadUrl CONTAINS "nulpstorage1" OR
-          n.posterImage CONTAINS "nulpstorage1" OR
-          n.streamingUrl CONTAINS "nulpstorage1" OR
-          n.appIcon CONTAINS "nulpstorage1" OR
-          n.artifactUrl CONTAINS "nulpstorage1" OR
-          n.previewUrl CONTAINS "nulpstorage1"
-      )
-      AND n.status = "Live"
+    WHERE (
+        n.downloadUrl CONTAINS "nulpstorage1" OR
+        n.posterImage CONTAINS "nulpstorage1" OR
+        n.streamingUrl CONTAINS "nulpstorage1" OR
+        n.appIcon CONTAINS "nulpstorage1" OR
+        n.artifactUrl CONTAINS "nulpstorage1" OR
+        n.previewUrl CONTAINS "nulpstorage1"
+    )
+    AND n.status = "Live"
+    AND n.primaryCategory = "Course"
+    RETURN n;
   `;
 
   try {
@@ -138,7 +140,7 @@ async function updateNodeUrls(nodeId, props) {
 
     log(
       SUCCESS_LOG,
-      `Updated nodeId=${nodeId}, IL_UNIQUE_ID=${IL_UNIQUE_ID}, status=${updateRes.data.results[0].data[0].row[0].status}, primaryCategory=${updateRes.data.results[0].data[0].row[0].primaryCategory}`
+      `Updated nodeId=${nodeId}, IL_UNIQUE_ID=${IL_UNIQUE_ID}, status=${updateRes.data.results[0].data[0].row[0].status}, primaryCategory=${updateRes.data.results[0].data[0].row[0].primaryCategory}, data=${JSON.stringify(updateRes.data.results[0].data[0].row[0])}`
     );
     return updateRes.data;
   } catch (err) {
