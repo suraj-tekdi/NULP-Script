@@ -55,7 +55,6 @@ async function fetchNodesWithNulpstorage1(skip = 0, limit = BATCH_SIZE) {
         n.previewUrl CONTAINS "nulpstorage1"
     )
     AND n.status = "Live"
-    AND n.primaryCategory <> "Course"
     RETURN n;
   `;
 
